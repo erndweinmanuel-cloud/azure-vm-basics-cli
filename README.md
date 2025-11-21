@@ -13,8 +13,6 @@ It is part of my AZ-104 learning path and builds the foundation for later networ
 - Open RDP (3389) via CLI  
 - Connect to the VM via Remote Desktop  
 
----
-
 ##  Prerequisites
 - Azure Subscription  
 - Azure CLI or Azure Cloud Shell  
@@ -36,8 +34,8 @@ az vm create \
   --name firstvm01 \
   --image Win2022Datacenter \
   --size Standard_B1s \
-  --admin-username  \
-  --admin-password '' \
+  --admin-username username \
+  --admin-password 'password' \
   --location westeurope \
   --public-ip-sku Standard \
   --output table
@@ -69,6 +67,12 @@ az vm show \
 ---
 
 ## Step 5 connect via RDP
+
+Open the Remote Desktop client (mstsc on Windows),  
+enter the public IP from Step 4, and log in using:
+
+- **Username:** the admin username you specified  
+- **Password:** the secure password you created
 
 ---
 
