@@ -33,7 +33,7 @@ az vm create \
   --resource-group app-grp \
   --name firstvm01 \
   --image Win2022Datacenter \
-  --size Standard_B1s \
+  --size Standard_B2s \
   --admin-username username \
   --admin-password 'password' \
   --location westeurope \
