@@ -79,7 +79,7 @@ enter the public IP from Step 4, and log in using:
 
 ---
 
-## Step 6 - Cleanup
+## Step 6 - Cleanup (optional)
 ```bash
 az group delete --name app-grp --yes --no-wait
 ```
