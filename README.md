@@ -20,6 +20,9 @@ It is part of my AZ-104 learning path and builds the foundation for later networ
 
   ---
 
+  ## Section 1 - Deploy Windows VM (Mini-Lab)
+
+
 ## Step 1 – Create Resource Group
 ```bash
 az group create --name app-grp --location westeurope --output table
@@ -92,6 +95,73 @@ az group delete --name app-grp --yes --no-wait
 - Handling errors like unavailable SKUs
 
 - First full compute deployment without portal usage
+
+  ---
+
+  ## Section 2 - Resize the Virtual Machine (Mini-Lab)
+
+
+  This mini-lab shows how to resize an existing VM using the Azure CLI.  
+The VM was created in Section 1 and is resized within the same VM family.
+
+
+## Step 1 – Deallocate the VM
+```bash
+az vm deallocate \
+  --resource-group app-grp \
+  --name firstvm01
+```
+
+---
+
+## Step 2 – Check available resize options (optional but recommended)
+```bash
+az vm list-vm-resize-options \
+  --resource-group app-grp \
+  --name firstvm01 \
+  -o table
+```
+
+---
+
+## Step 3 – Resize the VM (example: B2ms)
+```bash
+az vm resize \
+  --resource-group app-grp \
+  --name firstvm01 \
+  --size Standard_B2ms
+```
+
+---
+
+## Step 4 – Start the VM again
+```bash
+az vm start \
+  --resource-group app-grp \
+  --name firstvm01
+```
+
+---
+
+## Step 5 – Verify new size
+```bash
+az vm show \
+  --resource-group app-grp \
+  --name firstvm01 \
+  --query "hardwareProfile.vmSize" \
+  -o tsv
+```
+
+## Learnings (Resize)
+
+- A VM must be deallocated before resizing.
+
+- az vm list-vm-resize-options shows only compatible SKUs for the existing VM.
+
+- Not every VM size can be converted to every other size (resource disk vs. non-resource disk).
+
+- Resizing within the same family (e.g. B1s → B2ms) is the typical real-world scenario.
+
 
 
 
