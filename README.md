@@ -20,7 +20,7 @@ It is part of my AZ-104 learning path and builds the foundation for later networ
 
   ---
 
-  ## Section 1 - Deploy Windows VM (Mini-Lab)
+## Section 1 - Deploy Windows VM (Mini-Lab)
 
 
 ## Step 1 – Create Resource Group
@@ -98,10 +98,9 @@ az group delete --name app-grp --yes --no-wait
 
   ---
 
-  ## Section 2 - Resize the Virtual Machine (Mini-Lab)
+## Section 2 - Resize the Virtual Machine (Mini-Lab)
 
-
-  This mini-lab shows how to resize an existing VM using the Azure CLI.  
+This mini-lab shows how to resize an existing VM using the Azure CLI.  
 The VM was created in Section 1 and is resized within the same VM family.
 
 
@@ -161,6 +160,89 @@ az vm show \
 - Not every VM size can be converted to every other size (resource disk vs. non-resource disk).
 
 - Resizing within the same family (e.g. B1s → B2ms) is the typical real-world scenario.
+
+
+---
+
+## Section 3 - Install IIS Web Server on the VM (Mini-Lab)
+
+This mini-lab extends the VM deployment by installing a basic IIS web server on the Windows Server VM created in Section 1.
+The installation is performed remotely using Azure CLI with Run Command.
+
+
+## Step 1 - Ensure the VM is running
+```bash
+az vm start \
+  --resource-group app-grp \
+  --name firstvm01
+```
+
+---
+
+## Step 2 – Install IIS using Run Command
+```bash
+az vm run-command invoke \
+  --resource-group app-grp \
+  --name firstvm01 \
+  --command-id RunPowerShellScript \
+  --scripts "Install-WindowsFeature -name Web-Server -IncludeManagementTools"
+```
+
+---
+
+## Step 3 – Open Port 80 (HTTP) in the NSG
+```bash
+az vm open-port \
+  --resource-group app-grp \
+  --name firstvm01 \
+  --port 80 \
+  --priority 1002
+```
+
+---
+
+## Step 4 – Retrieve Public IP
+```bash
+az vm show \
+  --resource-group app-grp \
+  --name firstvm01 \
+  --show-details \
+  --query publicIps \
+  -o tsv
+```
+
+---
+
+## Step 5 – Test the Web Server
+```bash
+http://PUBLIC-IP
+```
+
+---
+
+## Step 6 – Cleanup (optional)
+```bash
+az group delete --name app-grp --yes --no-wait
+```
+
+---
+
+## Learnings (Web Server)
+
+- Installing software/workloads on VMs remotely
+
+- Using az vm run-command for automation
+
+- Opening additional NSG ports securely
+
+- Understanding IIS as a sample web workload
+
+- Seeing workload availability through public access
+
+
+
+
+
 
 
 
