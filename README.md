@@ -214,6 +214,9 @@ az vm show \
 ---
 
 ## Step 5 – Test the Web Server
+
+Open a browser and enter the public IP:
+
 ```bash
 http://PUBLIC-IP
 ```
@@ -238,6 +241,8 @@ az group delete --name app-grp --yes --no-wait
 - Understanding IIS as a sample web workload
 
 - Seeing workload availability through public access
+
+- Note: Port 80 is used here only for demonstration. in production environments, HTTPS and certificates should be used.
 
 
 
