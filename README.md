@@ -179,7 +179,18 @@ az vm start \
 
 ---
 
-## Step 2 – Install IIS using Run Command
+## Step 2 - Open port 22 (SSH)
+```bash
+az vm open-port \
+  --resource-group app-grp \
+  --name linuxvm01 \
+  --port 22 \
+  --priority 1003
+```
+
+---
+
+## Step 3 – Install IIS using Run Command
 ```bash
 az vm run-command invoke \
   --resource-group app-grp \
@@ -190,7 +201,7 @@ az vm run-command invoke \
 
 ---
 
-## Step 3 – Open Port 80 (HTTP) in the NSG
+## Step 4 – Open Port 80 (HTTP) in the NSG
 ```bash
 az vm open-port \
   --resource-group app-grp \
@@ -201,7 +212,7 @@ az vm open-port \
 
 ---
 
-## Step 4 – Retrieve Public IP
+## Step 5 – Retrieve Public IP
 ```bash
 az vm show \
   --resource-group app-grp \
@@ -213,7 +224,7 @@ az vm show \
 
 ---
 
-## Step 5 – Test the Web Server
+## Step 6 – Test the Web Server
 
 Open a browser and enter the public IP:
 
@@ -223,7 +234,7 @@ http://PUBLIC-IP
 
 ---
 
-## Step 6 – Cleanup (optional)
+## Step 7 – Cleanup (optional)
 ```bash
 az group delete --name app-grp --yes --no-wait
 ```
@@ -243,6 +254,104 @@ az group delete --name app-grp --yes --no-wait
 - Seeing workload availability through public access
 
 - Note: Port 80 is used here only for demonstration. in production environments, HTTPS and certificates should be used.
+
+---
+
+## Section 4 - Deploy a Linux VM with SSH Key Authentication (Mini-Lab)
+
+This mini-lab demonstrates how to deploy an Ubuntu Linux virtual machine using SSH key authentication instead of a password.
+The VM is created via the Azure CLI and accessed securely using a locally generated SSH key pair.
+
+
+## Step 1 - Generate SSH Keypair (on local machine or Cloud Shell)
+```bash
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/azure_key
+```
+No passphrase required for this lab.
+This generates:
+Private key: ~/.ssh/azure_key
+Public key: ~/.ssh/azure_key.pub
+
+---
+
+## Step 2 - Store public key into variable
+```bash
+PUBLIC_KEY="$(cat ~/.ssh/azure_key.pub)"
+```
+
+---
+
+## Step 3 - Create Linux VM using SSH Key authentication (Azure Shell)
+```bash
+az vm create \
+  --resource-group app-grp \
+  --name linuxvm01 \
+  --image Ubuntu2204 \
+  --size Standard_B1s \
+  --admin-username azureuser \
+  --authentication-type ssh \
+  --ssh-key-values "$PUBLIC_KEY" \
+  --public-ip-sku Standard \
+  --output table
+```
+
+---
+
+## Step 4 - Retrieve Public IP
+```bash
+az vm show \
+  --resource-group app-grp \
+  --name linuxvm01 \
+  --show-details \
+  --query publicIps \
+  -o tsv
+```
+
+---
+
+## Step 5 – Connect via SSH using the private key
+```bash
+ssh -i ~/.ssh/azure_key azureuser@PUBLIC-IP
+```
+
+successful login confirms:
+- SSH-key authentication
+- Linux VM reachable
+- Inbound NSG rules work
+
+---
+
+## Step 6 - optional verification: password login disabled (on local machine or Cloud Shell)
+```bash
+sudo sshd -T | grep passwordauthentication
+```
+
+Expected Output:
+```nginx
+passwordauthentication no
+``` 
+
+---
+
+## Step 7 – Cleanup (optional)
+```bash
+az group delete --name app-grp --yes --no-wait
+```
+
+---
+
+## Learnings (Linux + SSH)
+- Generating and handling SSH keypairs
+- secure authentication without passwords
+- Logging into Linux VM via SSH
+- Understanding NSG access requirements
+- Comfort inside a Linux terminal in Azure
+- Recognizing default security posture in cloud images
+
+
+
+
+
 
 
 
