@@ -179,18 +179,7 @@ az vm start \
 
 ---
 
-## Step 2 - Open port 22 (SSH)
-```bash
-az vm open-port \
-  --resource-group app-grp \
-  --name linuxvm01 \
-  --port 22 \
-  --priority 1003
-```
-
----
-
-## Step 3 – Install IIS using Run Command
+## Step 2 – Install IIS using Run Command
 ```bash
 az vm run-command invoke \
   --resource-group app-grp \
@@ -201,7 +190,7 @@ az vm run-command invoke \
 
 ---
 
-## Step 4 – Open Port 80 (HTTP) in the NSG
+## Step 3 – Open Port 80 (HTTP) in the NSG
 ```bash
 az vm open-port \
   --resource-group app-grp \
@@ -212,7 +201,7 @@ az vm open-port \
 
 ---
 
-## Step 5 – Retrieve Public IP
+## Step 4 – Retrieve Public IP
 ```bash
 az vm show \
   --resource-group app-grp \
@@ -224,7 +213,7 @@ az vm show \
 
 ---
 
-## Step 6 – Test the Web Server
+## Step 5 – Test the Web Server
 
 Open a browser and enter the public IP:
 
@@ -234,7 +223,7 @@ http://PUBLIC-IP
 
 ---
 
-## Step 7 – Cleanup (optional)
+## Step 6 – Cleanup (optional)
 ```bash
 az group delete --name app-grp --yes --no-wait
 ```
@@ -294,10 +283,22 @@ az vm create \
   --public-ip-sku Standard \
   --output table
 ```
+Note: The VM must be deployed in the same region as the Resource Group
 
 ---
 
-## Step 4 - Retrieve Public IP
+## Step 4 - Open port 22 (SSH)
+```bash
+az vm open-port \
+  --resource-group app-grp \
+  --name linuxvm01 \
+  --port 22 \
+  --priority 1003
+```
+
+---
+
+## Step 5 - Retrieve Public IP
 ```bash
 az vm show \
   --resource-group app-grp \
@@ -309,7 +310,7 @@ az vm show \
 
 ---
 
-## Step 5 – Connect via SSH using the private key
+## Step 6 – Connect via SSH using the private key
 ```bash
 ssh -i ~/.ssh/azure_key azureuser@PUBLIC-IP
 ```
@@ -321,7 +322,7 @@ successful login confirms:
 
 ---
 
-## Step 6 - optional verification: password login disabled (on local machine or Cloud Shell)
+## Step 7 - optional verification: password login disabled (on local machine or Cloud Shell)
 ```bash
 sudo sshd -T | grep passwordauthentication
 ```
@@ -333,7 +334,7 @@ passwordauthentication no
 
 ---
 
-## Step 7 – Cleanup (optional)
+## Step 8 – Cleanup (optional)
 ```bash
 az group delete --name app-grp --yes --no-wait
 ```
