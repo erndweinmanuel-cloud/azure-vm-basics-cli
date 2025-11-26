@@ -1,7 +1,7 @@
 # azure-vm-basics-cli
 Mini Azure Project – Deploy a Windows VM via Azure CLI
 
-This mini-lab demonstrates how to deploy a Windows Server virtual machine **fully via Azure CLI**, without using the Azure Portal.  
+This mini-lab demonstrates how to deploy a Windows and a Linux Server virtual machine **fully via Azure CLI**, without using the Azure Portal.  
 It is part of my AZ-104 learning path and builds the foundation for later networking and security projects.
 
 ---
