@@ -347,7 +347,8 @@ az group delete --name app-grp --yes --no-wait
 - Logging into Linux VM via SSH
 - Understanding NSG access requirements
 - Comfort inside a Linux terminal in Azure
-- Recognizing default security posture in cloud images
+- Recognising default security posture in cloud images
+- Cleanup Resource Group removes all dependent resources (VM, NIC, NSG, Disk, Public IP)
 
 
 
