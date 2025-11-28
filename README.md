@@ -432,7 +432,7 @@ az vm show \
 ```
 
 You should see:
-```code
+```text
 Name         Size    LUN
 -----------  ------  ----
 datadisk01   16      0
