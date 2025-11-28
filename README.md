@@ -353,9 +353,9 @@ az group delete --name app-grp --yes --no-wait
 
 ---
 
-## Section 5 - Attach & Initialize a Data Disk (Windows VM – Mini-Lab)
+## Section 5 - Attach and initialize a Data Disk (Windows VM – Mini-Lab)
 
-This mini-lab demonstrates how to attach an additional managed data disk to an existing Windows virtual machine using the Azure CLI and how to initialise and format it within the VM.
+This mini-lab demonstrates how to attach an additional managed data disk to an existing Windows virtual machine using the Azure CLI and how to initialize and format it within the VM.
 
 It builds directly on Section 1 (Windows VM deployment) and reinforces essential Azure compute + storage administration skills.
 
@@ -384,14 +384,14 @@ If successful, Azure automatically assigns a LUN (Logical Unit Number) and the d
 ---
 
 ## Step 3 – Connect to the VM via RDP
-
+```bash
 mstsc.exe
-
+```
 You can just enter the public IP from Section 1 and log in with your admin credentials.
 
 ---
 
-## Step 4 - Initialise and format the disk inside Windows
+## Step 4 - initialize and format the disk inside Windows
 
 Inside the VM:
 
@@ -432,11 +432,11 @@ az vm show \
 ```
 
 You should see:
-
+```code
 Name         Size    LUN
 -----------  ------  ----
 datadisk01   16      0
-
+```
 
 ---
 
