@@ -351,6 +351,122 @@ az group delete --name app-grp --yes --no-wait
 - Cleanup Resource Group removes all dependent resources (VM, NIC, NSG, Disk, Public IP)
 
 
+---
+
+## Section 5 - Attach & Initialize a Data Disk (Windows VM – Mini-Lab)
+
+This mini-lab demonstrates how to attach an additional managed data disk to an existing Windows virtual machine using the Azure CLI and how to initialise and format it within the VM.
+
+It builds directly on Section 1 (Windows VM deployment) and reinforces essential Azure compute + storage administration skills.
+
+## Step 1 - Create a new Managed Disk
+```bash
+az disk create \
+  --resource-group app-grp \
+  --name datadisk01 \
+  --size-gb 16 \
+  --sku Standard_LRS \
+  --output table
+```
+
+---
+
+## Step 2 - Attach the Disk to the VM
+```bash
+az vm disk attach \
+  --resource-group app-grp \
+  --vm-name firstvm01 \
+  --name datadisk01 \
+  --new
+```
+If successful, Azure automatically assigns a LUN (Logical Unit Number) and the disk appears as Offline / Uninitialized inside Windows.
+
+---
+
+## Step 3 – Connect to the VM via RDP
+
+mstsc.exe
+
+You can just enter the public IP from Section 1 and log in with your admin credentials.
+
+---
+
+## Step 4 - Initialise and format the disk inside Windows
+
+Inside the VM:
+
+Open Disk Management
+→ Win + X → Disk Management
+
+Locate the new disk:
+
+Status: Unknown
+
+State: Offline / Not Initialized
+
+Size: 16 GB
+
+Right-click → Initialize Disk
+
+Partition style: GPT
+
+Right-click unallocated area → New Simple Volume
+
+Quick Format
+
+Assign drive letter (default: F:)
+
+File System: NTFS
+
+After this, the disk appears under This PC as a new volume.
+
+---
+
+## Step 5 – Verify disk attachment via CLI (optional)
+```bash
+az vm show \
+  --resource-group app-grp \
+  --name firstvm01 \
+  --query "storageProfile.dataDisks[*].{Name:name,Size:diskSizeGb,LUN:lun}" \
+  -o table
+```
+
+You should see:
+
+Name         Size    LUN
+-----------  ------  ----
+datadisk01   16      0
+
+
+---
+
+## Step 6 – Cleanup (optional)
+
+Deleting the resource group removes:
+
+- VM
+- OS Disk
+- Data Disk
+- NIC
+- NSG
+- Public IP
+- VNet
+- Everything else
+
+```bash
+az group delete --name app-grp --yes --no-wait
+```
+
+---
+
+## Learnings (Data Disks)
+
+- Create and attach managed disks via Azure CLI
+- Understand LUN assignment and disk presentation to the OS
+- Disk initialization, partitioning and formatting (Windows Server)
+- Separation of OS disk vs. temporary disk vs. data disk
+- Ability to extend VM storage without redeployment
+- Real-world admin scenario (very common in Azure jobs)
 
 
 
