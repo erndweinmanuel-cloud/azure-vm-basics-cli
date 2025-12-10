@@ -468,8 +468,111 @@ az group delete --name app-grp --yes --no-wait
 - Ability to extend VM storage without redeployment
 - Real-world admin scenario (very common in Azure jobs)
 
+---
 
+## Section 6 - Create a Snapshot and Restore a VM (Mini-Lab)
 
+This mini-lab demonstrates how to create a snapshot of an Azure VM OS disk and use it to deploy a new virtual machine.
+This scenario is common for backup, recovery, malware isolation, or cloning a baseline VM.
+
+---
+
+## Step 1 - Identify the OS Disk of the Source VM
+```bash
+az vm show \
+  --resource-group app-grp \
+  --name firstvm01 \
+  --query "storageProfile.osDisk.name" \
+  -o tsv
+```
+Save this value (e.g., firstvm01_OsDisk_1_xxxxx).
+
+---
+
+## Step 2 – Create a Snapshot of the OS Disk
+```bash
+az snapshot create \
+  --resource-group app-grp \
+  --name firstvm01-snap01 \
+  --source <OS_DISK_NAME> \
+  --output table
+```
+A successful snapshot appears as:
+```text
+DiskSizeGB   DiskState   Incremental   Name
+127          Unattached  False         firstvm01-snap01
+```
+
+---
+
+## Step 3 – Create a Managed Disk from the Snapshot
+```bash
+az disk create \
+  --resource-group app-grp \
+  --name restored-osdisk01 \
+  --source firstvm01-snap01 \
+  --output table
+```
+This converts the snapshot into a bootable managed disk.
+
+---
+
+## Step 4 – Create a New VM from the Restored OS Disk
+```bash
+az vm create \
+  --resource-group app-grp \
+  --name restoredvm01 \
+  --attach-os-disk restored-osdisk01 \
+  --os-type Windows \
+  --public-ip-sku Standard \
+  --output table
+```
+Azure automatically creates:
+- NIC
+- NSG
+- Public IP
+- VNet (if needed)
+
+---
+
+## Step 5 – Verify the New VM Boots Correctly
+```bash
+az vm show \
+  --resource-group app-grp \
+  --name restoredvm01 \
+  --query "storageProfile.osDisk" \
+  -o table
+```
+Example expected output:
+```text
+OsType    Name               CreateOption   DiskSizeGb
+Windows   restored-osdisk01  Attach         127
+```
+You can now RDP into the VM using the username/password from the original VM.
+
+---
+
+## Step 6– Cleanup (optional)
+
+This lab creates many dependent resources.
+Deleting the VM does not delete the disk, NIC, NSG, or public IP.
+
+To remove everything:
+
+```bash
+az group delete --name app-grp --yes --no-wait
+```
+
+## Learnings (Snapshots & Recovery)
+
+- Creating OS disk snapshots
+- Restoring a VM from a snapshot
+- Converting a snapshot → managed disk → bootable VM
+- Understanding resource dependencies (NIC, NSG, Public IP, Disk)
+- Typical Azure DR / forensics workflow
+- Confident use of CLI for disaster-recovery operations
+
+---
 
 
 
