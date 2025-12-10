@@ -531,7 +531,8 @@ Azure automatically creates new:
 - NIC
 - NSG
 - Public IP
-Azure automatically  creates a default VNet and Subnet if none exist.
+- VNET + Subnet (if none exist)
+
   
 
 ---
@@ -553,7 +554,7 @@ You can now RDP into the VM using the username/password from the original VM.
 
 ---
 
-## Step 6– Cleanup (optional)
+## Step 6 – Cleanup (optional)
 
 This lab creates many dependent resources.
 Deleting the VM does not delete the disk, NIC, NSG, or public IP.
