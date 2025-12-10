@@ -499,8 +499,8 @@ az snapshot create \
 ```
 A successful snapshot appears as:
 ```text
-DiskSizeGB   DiskState   Incremental   Name
-127          Unattached  False         firstvm01-snap01
+Name              DiskSizeGB   ProvisioningState
+firstvm01-snap01  127          Succeeded
 ```
 
 ---
@@ -513,7 +513,7 @@ az disk create \
   --source firstvm01-snap01 \
   --output table
 ```
-This converts the snapshot into a bootable managed disk.
+This converts the snapshot into a bootable managed disk. The disk SKU is inherited from the snapshot source, unless it is explicitly overridden.
 
 ---
 
@@ -527,11 +527,12 @@ az vm create \
   --public-ip-sku Standard \
   --output table
 ```
-Azure automatically creates:
+Azure automatically creates new:
 - NIC
 - NSG
 - Public IP
-- VNet (if needed)
+Azure automatically  creates a default VNet and Subnet if none exist.
+  
 
 ---
 
